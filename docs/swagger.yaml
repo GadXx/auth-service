@@ -1,0 +1,162 @@
+definitions:
+  handler.ErrorResponse:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+      type:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /me:
+    get:
+      description: Требует access token в заголовке Authorization.
+      parameters:
+      - default: Bearer <access_token>
+        description: Bearer access_token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - default: Swagger-Test
+        description: User-Agent
+        in: header
+        name: User-Agent
+        type: string
+      - default: 127.0.0.1
+        description: IP адрес клиента
+        in: header
+        name: X-Forwarded-For
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Получить ID аутентифицированного пользователя
+      tags:
+      - auth
+  /new_session/{user_id}:
+    get:
+      description: Создает новую сессию для пользователя. Возвращает access token
+        в заголовке и refresh token в cookie.
+      parameters:
+      - default: 0921ac27-5ec4-4031-a8f2-665e9c3c9eb3
+        description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - default: Swagger-Test
+        description: User-Agent
+        in: header
+        name: User-Agent
+        type: string
+      - default: 127.0.0.1
+        description: IP адрес клиента
+        in: header
+        name: X-Forwarded-For
+        type: string
+      responses:
+        "200":
+          description: OK
+          headers:
+            Access-Token:
+              description: Bearer <access_token>
+              type: string
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Создать новую сессию
+      tags:
+      - auth
+  /refresh:
+    get:
+      description: Требует access token в заголовке Authorization и cookie refresh_token.
+      parameters:
+      - default: Bearer <access_token>
+        description: Bearer access_token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - default: Swagger-Test
+        description: User-Agent
+        in: header
+        name: User-Agent
+        type: string
+      - default: 127.0.0.1
+        description: IP адрес клиента
+        in: header
+        name: X-Forwarded-For
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Access-Token:
+              description: Bearer <new_access_token>
+              type: string
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Обновить access/refresh токены
+      tags:
+      - auth
+  /refresh/revoke:
+    post:
+      description: Требует access token в заголовке Authorization и cookie refresh_token.
+        Делает refresh токен невалидным и access token помещает в blacklist.
+      parameters:
+      - default: Bearer <access_token>
+        description: Bearer access_token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - default: Swagger-Test
+        description: User-Agent
+        in: header
+        name: User-Agent
+        type: string
+      - default: 127.0.0.1
+        description: IP адрес клиента
+        in: header
+        name: X-Forwarded-For
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Отозвать сессию
+      tags:
+      - auth
+swagger: "2.0"
