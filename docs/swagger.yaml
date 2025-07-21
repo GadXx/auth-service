@@ -1,19 +1,31 @@
 definitions:
   handler.ErrorResponse:
     properties:
-      code:
-        type: string
       message:
         type: string
       type:
         type: string
+    type: object
+  handler.Response:
+    properties:
+      data: {}
+      error:
+        $ref: '#/definitions/handler.ErrorResponse'
+      success:
+        type: boolean
+    type: object
+  handler.SuccessResponse:
+    properties:
+      data: {}
+      success:
+        type: boolean
     type: object
 info:
   contact: {}
 paths:
   /me:
     get:
-      description: Требует access token в заголовке Authorization.
+      description: Требует access token в заголовке Authorization
       parameters:
       - default: Bearer <access_token>
         description: Bearer access_token
@@ -37,19 +49,17 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/handler.SuccessResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.Response'
       summary: Получить ID аутентифицированного пользователя
       tags:
       - auth
   /new_session/{user_id}:
     get:
-      description: Создает новую сессию для пользователя. Возвращает access token
-        в заголовке и refresh token в cookie.
+      description: Возвращает access token в заголовке и refresh token в cookie
       parameters:
       - default: 0921ac27-5ec4-4031-a8f2-665e9c3c9eb3
         description: User ID
@@ -75,12 +85,11 @@ paths:
               description: Bearer <access_token>
               type: string
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/handler.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.Response'
       summary: Создать новую сессию
       tags:
       - auth
@@ -114,19 +123,17 @@ paths:
               description: Bearer <new_access_token>
               type: string
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/handler.SuccessResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.Response'
       summary: Обновить access/refresh токены
       tags:
       - auth
   /refresh/revoke:
     post:
-      description: Требует access token в заголовке Authorization и cookie refresh_token.
-        Делает refresh токен невалидным и access token помещает в blacklist.
+      description: Требует access token в заголовке Authorization.
       parameters:
       - default: Bearer <access_token>
         description: Bearer access_token
@@ -150,12 +157,11 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/handler.SuccessResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/handler.ErrorResponse'
+            $ref: '#/definitions/handler.Response'
       summary: Отозвать сессию
       tags:
       - auth

@@ -26,19 +26,19 @@ func NewAuthHandler(authService *service.AuthService) *AuthHandler {
 	}
 }
 
-// HandleNewSession godoc
+// NewSession godoc
 // @Summary      Создать новую сессию
-// @Description  Создает новую сессию для пользователя. Возвращает access token в заголовке и refresh token в cookie.
+// @Description  Возвращает access token в заголовке и refresh token в cookie
 // @Tags         auth
 // @Param        user_id           path      string  true   "User ID"           default(0921ac27-5ec4-4031-a8f2-665e9c3c9eb3)
 // @Param        User-Agent        header    string  false  "User-Agent"        default(Swagger-Test)
 // @Param        X-Forwarded-For   header    string  false  "IP адрес клиента"  default(127.0.0.1)
-// @Success      200  {object}  map[string]interface{}
-// @Failure      400  {object}  handler.ErrorResponse
+// @Success      200  {object}  handler.SuccessResponse
+// @Failure      400  {object}  handler.Response
 // @Header       200  {string}  Access-Token  "Bearer <access_token>"
 // @Set-Cookie   refresh_token=...; Path=/refresh; HttpOnly; Secure; SameSite=Strict
 // @Router       /new_session/{user_id} [get]
-func (h *AuthHandler) HandleNewSession(w http.ResponseWriter, r *http.Request) {
+func (h *AuthHandler) NewSession(w http.ResponseWriter, r *http.Request) {
 
 	strID := chi.URLParam(r, "user_id")
 	id, err := uuid.Parse(strID)
@@ -80,14 +80,14 @@ func (h *AuthHandler) HandleNewSession(w http.ResponseWriter, r *http.Request) {
 
 // GetAuthenticatedUserID godoc
 // @Summary      Получить ID аутентифицированного пользователя
-// @Description  Требует access token в заголовке Authorization.
+// @Description  Требует access token в заголовке Authorization
 // @Tags         auth
 // @Produce      json
 // @Param        Authorization      header    string  true   "Bearer access_token"  default(Bearer <access_token>)
 // @Param        User-Agent         header    string  false  "User-Agent"           default(Swagger-Test)
 // @Param        X-Forwarded-For    header    string  false  "IP адрес клиента"     default(127.0.0.1)
-// @Success      200  {object}  map[string]interface{}
-// @Failure      401  {object}  handler.ErrorResponse
+// @Success      200  {object}  handler.SuccessResponse
+// @Failure      401  {object}  handler.Response
 // @Router       /me [get]
 func (h *AuthHandler) GetAuthenticatedUserID(w http.ResponseWriter, r *http.Request) {
 
@@ -125,8 +125,8 @@ func (h *AuthHandler) GetAuthenticatedUserID(w http.ResponseWriter, r *http.Requ
 // @Param        Authorization      header    string  true   "Bearer access_token"  default(Bearer <access_token>)
 // @Param        User-Agent         header    string  false  "User-Agent"           default(Swagger-Test)
 // @Param        X-Forwarded-For    header    string  false  "IP адрес клиента"     default(127.0.0.1)
-// @Success      200  {object}  map[string]interface{}
-// @Failure      401  {object}  handler.ErrorResponse
+// @Success      200  {object}  handler.SuccessResponse
+// @Failure      401  {object}  handler.Response
 // @Header       200  {string}  Access-Token  "Bearer <new_access_token>"
 // @Set-Cookie   refresh_token=...; Path=/refresh; HttpOnly; Secure; SameSite=Strict
 // @Router       /refresh [get]
@@ -179,14 +179,14 @@ func (h *AuthHandler) RefreshSession(w http.ResponseWriter, r *http.Request) {
 
 // RevokeSession godoc
 // @Summary      Отозвать сессию
-// @Description  Требует access token в заголовке Authorization и cookie refresh_token. Делает refresh токен невалидным и access token помещает в blacklist.
+// @Description  Требует access token в заголовке Authorization.
 // @Tags         auth
 // @Produce      json
 // @Param        Authorization      header    string  true   "Bearer access_token"  default(Bearer <access_token>)
 // @Param        User-Agent         header    string  false  "User-Agent"           default(Swagger-Test)
 // @Param        X-Forwarded-For    header    string  false  "IP адрес клиента"     default(127.0.0.1)
-// @Success      200  {object}  map[string]interface{}
-// @Failure      401  {object}  handler.ErrorResponse
+// @Success      200  {object}  handler.SuccessResponse
+// @Failure      401  {object}  handler.Response
 // @Router       /refresh/revoke [post]
 func (h *AuthHandler) RevokeSession(w http.ResponseWriter, r *http.Request) {
 

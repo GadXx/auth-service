@@ -13,10 +13,14 @@ type Response struct {
 	Error   *ErrorResponse `json:"error,omitempty"`
 }
 
+type SuccessResponse struct {
+	Success bool        `json:"success"`
+	Data    interface{} `json:"data,omitempty"`
+}
+
 type ErrorResponse struct {
 	Type    string `json:"type"`
 	Message string `json:"message"`
-	Code    string `json:"code,omitempty"`
 }
 
 func WriteError(w http.ResponseWriter, err error) {

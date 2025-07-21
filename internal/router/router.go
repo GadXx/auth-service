@@ -19,7 +19,7 @@ func NewRouter(authHandler *handler.AuthHandler, blackList *service.BlacklistSer
 
 	router.Get("/docs/*", httpSwagger.WrapHandler)
 
-	router.Get("/new_session/{user_id}", authHandler.HandleNewSession)
+	router.Get("/new_session/{user_id}", authHandler.NewSession)
 	router.Get("/refresh", authHandler.RefreshSession)
 	router.Post("/refresh/revoke", authHandler.RevokeSession)
 

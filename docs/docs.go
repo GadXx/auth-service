@@ -17,7 +17,7 @@ const docTemplate = `{
     "paths": {
         "/me": {
             "get": {
-                "description": "Требует access token в заголовке Authorization.",
+                "description": "Требует access token в заголовке Authorization",
                 "produces": [
                     "application/json"
                 ],
@@ -53,14 +53,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/handler.SuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.Response"
                         }
                     }
                 }
@@ -68,7 +67,7 @@ const docTemplate = `{
         },
         "/new_session/{user_id}": {
             "get": {
-                "description": "Создает новую сессию для пользователя. Возвращает access token в заголовке и refresh token в cookie.",
+                "description": "Возвращает access token в заголовке и refresh token в cookie",
                 "tags": [
                     "auth"
                 ],
@@ -101,8 +100,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/handler.SuccessResponse"
                         },
                         "headers": {
                             "Access-Token": {
@@ -114,7 +112,7 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.Response"
                         }
                     }
                 }
@@ -158,8 +156,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/handler.SuccessResponse"
                         },
                         "headers": {
                             "Access-Token": {
@@ -171,7 +168,7 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.Response"
                         }
                     }
                 }
@@ -179,7 +176,7 @@ const docTemplate = `{
         },
         "/refresh/revoke": {
             "post": {
-                "description": "Требует access token в заголовке Authorization и cookie refresh_token. Делает refresh токен невалидным и access token помещает в blacklist.",
+                "description": "Требует access token в заголовке Authorization.",
                 "produces": [
                     "application/json"
                 ],
@@ -215,14 +212,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": true
+                            "$ref": "#/definitions/handler.SuccessResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/handler.ErrorResponse"
+                            "$ref": "#/definitions/handler.Response"
                         }
                     }
                 }
@@ -233,14 +229,32 @@ const docTemplate = `{
         "handler.ErrorResponse": {
             "type": "object",
             "properties": {
-                "code": {
-                    "type": "string"
-                },
                 "message": {
                     "type": "string"
                 },
                 "type": {
                     "type": "string"
+                }
+            }
+        },
+        "handler.Response": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "error": {
+                    "$ref": "#/definitions/handler.ErrorResponse"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "handler.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "success": {
+                    "type": "boolean"
                 }
             }
         }
@@ -249,12 +263,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
-	Host:             "localhost:8080",
-	BasePath:         "/",
-	Schemes:          []string{"http"},
-	Title:            "Auth Service",
-	Description:      "API аутентификации и авторизации",
+	Version:          "",
+	Host:             "",
+	BasePath:         "",
+	Schemes:          []string{},
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
