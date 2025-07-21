@@ -4,7 +4,7 @@
 Чтобы запустить локально выполни:
 
 ```
-  docker-compose -f docker-compose.yml up -d.
+  docker-compose -f docker-compose.yml up -d
 ```
 
 #### Swagger
